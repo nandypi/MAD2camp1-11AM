@@ -9,7 +9,7 @@ from models import db, User, Item
 
 class HelloWorld(Resource):
     def get(self):
-        return {"message": "Get request received!"}
+        return {"message": "Hello! Greetings from the backend..."}
     def post(self):
         return {"message": "Post request received!"}
     def put(self):

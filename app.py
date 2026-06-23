@@ -1,7 +1,10 @@
 from flask import Flask, request
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['JWT_SECRET_KEY'] = 'your-secret-key' # you can keep it in .env and load it using python-dotenv for better security
 jwt = JWTManager(app)
 
