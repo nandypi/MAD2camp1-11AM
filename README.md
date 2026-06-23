@@ -29,6 +29,8 @@ python app.py
 
 # Run Frontend
 
+in another terminal
+
 ```bash
 cd frontend
 npm install
