@@ -21,3 +21,16 @@ if you want to add new package then after installing run this to update requirem
 pip freeze > requirements.txt
 ```
 
+# Run Backend APIs
+
+```bash
+python app.py
+```
+
+# Run Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
