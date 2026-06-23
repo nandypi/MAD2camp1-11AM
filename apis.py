@@ -22,6 +22,8 @@ api.add_resource(HelloWorld, '/hello')
 
 ## auth resource
 
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+
 class LoginResource(Resource):
     def post(self):
         data = request.get_json()
@@ -30,7 +32,8 @@ class LoginResource(Resource):
         user = User.query.filter_by(email=data['email']).first()
         if not user or user.password != data['password']:
             return {"message": "Invalid email or password!"}, 401
-        return {"message": f"User {user.email} logged in successfully!"}
+        access_token = create_access_token(user.email)
+        return {"message": f"User {user.email} logged in successfully!", "token": access_token}
 api.add_resource(LoginResource, '/login')
 
 class RegisterResource(Resource):
@@ -46,11 +49,16 @@ class RegisterResource(Resource):
         return {"message": f"User {user.email} registered successfully!"}, 201
 api.add_resource(RegisterResource, '/register')
 
+def IsAdmin() -> bool:
+    request_user = User.query.filter_by(email=get_jwt_identity()).first()
+    return request_user.role == "admin"
+
 ##
 
 ## item resource
 
 class ItemResource(Resource):
+    @jwt_required()
     def get(self, item_id=None):
         if item_id:
             item = Item.query.get(item_id)
@@ -59,7 +67,11 @@ class ItemResource(Resource):
             return {"message": f"Item {item_id} returned!", "item": {"id": item.id, "name": item.name, "description": item.description, "image_url": item.image_url}}
         items = [{"id": item.id, "name": item.name, "description": item.description, "image_url": item.image_url} for item in Item.query.all()]
         return {"message": f"All items returned!", "items": items}
+    @jwt_required()
     def post(self, item_id=None):
+        if not IsAdmin():
+            return {"message": "You are not allowed to do this"}, 403
+        
         if item_id:
             return {"message": "Item id is not required for creation of new items!"}, 400
         data = request.get_json()
@@ -69,7 +81,11 @@ class ItemResource(Resource):
         db.session.add(item)
         db.session.commit()
         return {"message": f"Item created successfully!", "item": {"id": item.id, "name": item.name, "description": item.description, "image_url": item.image_url}}, 201
+    @jwt_required()
     def put(self, item_id):
+        if not IsAdmin():
+            return {"message": "You are not allowed to do this"}, 403
+
         item = Item.query.get(item_id)
         if not item:
             return {"message": f"Item with id {item_id} not found!"}, 404
@@ -81,7 +97,11 @@ class ItemResource(Resource):
         item.image_url = data.get('image_url')
         db.session.commit()
         return {"message": f"Successfully updated item {item_id}!", "item": {"id": item.id, "name": item.name, "description": item.description, "image_url": item.image_url}}
+    @jwt_required()
     def delete(self, item_id):
+        if not IsAdmin():
+            return {"message": "You are not allowed to do this"}, 403
+        
         item = Item.query.get(item_id)
         if not item:
             return {"message": f"Item with id {item_id} not found!"}, 404

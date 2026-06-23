@@ -1,6 +1,9 @@
 from flask import Flask, request
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'your-secret-key' # you can keep it in .env and load it using python-dotenv for better security
+jwt = JWTManager(app)
 
 # connecting to the database
 from models import db, User
