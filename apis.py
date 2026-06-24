@@ -1,5 +1,6 @@
 from flask_restful import Api, Resource
 from flask import request
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 api = Api()
 
@@ -22,11 +23,10 @@ api.add_resource(HelloWorld, '/hello')
 
 ## auth resource
 
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-
 class LoginResource(Resource):
     def post(self):
         data = request.get_json()
+        print(data)
         if not data or not data.get('email') or not data.get('password'):
             return {"message": "Please provide email and password!"}, 400
         user = User.query.filter_by(email=data['email']).first()

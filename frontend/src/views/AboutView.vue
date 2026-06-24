@@ -1,15 +1,18 @@
 <template>
+
+  <RouterLink to="/">Go to Home</RouterLink>
   <div class="about">
-    <h1 id="message">...</h1>
+    <h1>This is an about page!</h1>
+
+    <h2 id="message">...</h2>
     
     <button @click="greetUser()">Greet Me</button>
   </div>
 
-  
-
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router';
 
 async function greetUser() {
     let message = document.getElementById("message")
@@ -21,12 +24,5 @@ async function greetUser() {
 </script>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
+
 </style>
