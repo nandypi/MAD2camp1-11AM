@@ -1,6 +1,7 @@
 from flask_restful import Api, Resource
 from flask import request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from datetime import timedelta
 
 api = Api()
 
@@ -32,8 +33,8 @@ class LoginResource(Resource):
         user = User.query.filter_by(email=data['email']).first()
         if not user or user.password != data['password']:
             return {"message": "Invalid email or password!"}, 401
-        access_token = create_access_token(user.email)
-        return {"message": f"User {user.email} logged in successfully!", "token": access_token}
+        access_token = create_access_token(user.email, expires_delta=timedelta(hours=1))
+        return {"message": f"User {user.email} logged in successfully!", "token": access_token, "user": {"email": user.email, "role": user.role}}
 api.add_resource(LoginResource, '/login')
 
 class RegisterResource(Resource):
