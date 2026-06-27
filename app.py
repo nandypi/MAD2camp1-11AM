@@ -14,8 +14,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db.init_app(app)
 
 # connecting to the API
-from apis import api
+from apis import api, cache
 api.init_app(app)
+app.config['CACHE_TYPE'] = 'RedisCache'
+app.config['CACHE_REDIS_URL'] = 'redis://localhost:6379/0'
+cache.init_app(app)
 
 ## This is the old way of handling routes without using Flask-RESTful; mad1 and mad2 are two different ways of returning responses (template vs JSON); we will be using the JSON response method for our API development, so we will comment out this route handler and use the one defined in apis.py instead.
 # @app.route('/', methods=['GET', 'POST', 'PUT', 'DELETE'])

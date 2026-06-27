@@ -1,9 +1,11 @@
 from flask_restful import Api, Resource
 from flask import request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_caching import Cache
 from datetime import timedelta
 
 api = Api()
+cache = Cache()
 
 from models import db, User, Item
 
@@ -55,6 +57,19 @@ def IsAdmin() -> bool:
     return request_user.role == "admin"
 
 ##
+import time
+
+class StatsResource(Resource):
+    # @jwt_required()
+    @cache.cached(timeout=30)
+    def get(self):
+        # if not IsAdmin():
+        #     return {"message": "You are not allowed to do this"}, 403
+        users_count = User.query.count()
+        time.sleep(10) # Simulating a long-running operation
+        items_count = Item.query.count()
+        return {"message": "Stats returned successfully!", "stats": {"users_count": users_count, "items_count": items_count}}
+api.add_resource(StatsResource, '/stats')
 
 ## item resource
 
