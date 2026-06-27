@@ -1,3 +1,6 @@
+# REQUIRED THINGS
+python, node.js, redis, mailhog 
+
 # Virtual Environtment
 
 Run the below commands to create python virtual environment
@@ -25,6 +28,18 @@ pip freeze > requirements.txt
 
 ```bash
 python app.py
+```
+
+# Celery Worker
+
+```bash
+celery -A celery_app worker --loglevel=INFO \\ --pool=solo only for windows
+```
+
+# Celery Beat
+
+```bash
+celery -A celery_app beat --loglevel=INFO
 ```
 
 # Run Frontend

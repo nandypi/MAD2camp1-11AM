@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -35,6 +36,7 @@ cache.init_app(app)
 #     return {"message": "Hello, World!"} # returning data as JSON response; mad2
 
 if __name__ == '__main__':
+    os.makedirs('static', exist_ok=True)  # Create the 'static' directory if it doesn't exist
 
     with app.app_context():
         db.create_all()  # Create the database tables if they don't exist

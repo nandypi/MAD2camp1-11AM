@@ -71,6 +71,17 @@ class StatsResource(Resource):
         return {"message": "Stats returned successfully!", "stats": {"users_count": users_count, "items_count": items_count}}
 api.add_resource(StatsResource, '/stats')
 
+class CSVExportResource(Resource):
+    # @jwt_required()
+    def get(self):
+        # if not IsAdmin():
+        #     return {"message": "You are not allowed to do this"}, 403
+        # Trigger the background task
+        from celery_app import background_task
+        background_task.delay()
+        return {"message": "CSV export task has been triggered! You will receive an email once the task is completed."}
+api.add_resource(CSVExportResource, '/export/csv')
+
 ## item resource
 
 class ItemResource(Resource):

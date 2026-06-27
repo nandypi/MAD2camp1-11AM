@@ -4,5 +4,10 @@ venv
 __pycache__/
 
 instance
+static
 
 .env
+
+celerybeat-schedule
+celerybeat-schedule-shm
+celerybeat-schedule-wal
